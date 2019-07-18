@@ -1,9 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 
-const dishRouter = express.Router();
+const leaderRouter = express.Router();
 // Routes for /
-dishRouter
+leaderRouter
   .route("/")
   .all((req, res, next) => {
     res.statusCode = 200;
@@ -11,11 +11,11 @@ dishRouter
     next();
   })
   .get((req, res, next) => {
-    res.end("Will send all the dishes to you");
+    res.end("Will send all the leaders to you");
   })
   .post((req, res, next) => {
     res.end(
-      "Will add the dish " +
+      "Will add the leader " +
         req.body.name +
         " with details " +
         req.body.description
@@ -23,32 +23,32 @@ dishRouter
   })
   .put((req, res, next) => {
     res.statusCode = 403;
-    res.end("PUT op not supported on dishes");
+    res.end("PUT op not supported on leaders");
   })
   .delete((req, res, next) => {
-    res.end("Will delete all dishes");
+    res.end("Will delete all leaders");
   });
-//Routes for /:dishId
-dishRouter
-  .route("/:dishId")
+//Routes for /:leaderId
+leaderRouter
+  .route("/:leaderId")
   .get((req, res, next) => {
-    res.end(`Will send details of ${req.params.dishId} to you`);
+    res.end(`Will send details of ${req.params.leaderId} to you`);
   })
   .post((req, res, next) => {
     res.statusCode = 403;
-    res.end("POST op not supported on dish " + req.params.dishId);
+    res.end("POST op not supported on leader " + req.params.leaderId);
   })
   .put((req, res, next) => {
-    res.write(`Updating ${req.params.dishId}`);
+    res.write(`Updating ${req.params.leaderId}`);
     res.end(
-      `Will update the dish ${req.body.name} with details ${
+      `Will update the leader ${req.body.name} with details ${
         req.body.description
       }`
     );
   })
   .delete((req, res, next) => {
     console.log(req.params);
-    res.end(`Deleting dish ${req.params.dishId}`);
+    res.end(`Deleting leader ${req.params.leaderId}`);
   });
 
-module.exports = dishRouter;
+module.exports = leaderRouter;

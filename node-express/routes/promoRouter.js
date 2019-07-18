@@ -1,9 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 
-const dishRouter = express.Router();
+const promotionRouter = express.Router();
 // Routes for /
-dishRouter
+promotionRouter
   .route("/")
   .all((req, res, next) => {
     res.statusCode = 200;
@@ -11,11 +11,11 @@ dishRouter
     next();
   })
   .get((req, res, next) => {
-    res.end("Will send all the dishes to you");
+    res.end("Will send all the promotions to you");
   })
   .post((req, res, next) => {
     res.end(
-      "Will add the dish " +
+      "Will add the promotion " +
         req.body.name +
         " with details " +
         req.body.description
@@ -23,32 +23,32 @@ dishRouter
   })
   .put((req, res, next) => {
     res.statusCode = 403;
-    res.end("PUT op not supported on dishes");
+    res.end("PUT op not supported on promotions");
   })
   .delete((req, res, next) => {
-    res.end("Will delete all dishes");
+    res.end("Will delete all promotions");
   });
-//Routes for /:dishId
-dishRouter
-  .route("/:dishId")
+//Routes for /:promotionId
+promotionRouter
+  .route("/:promotionId")
   .get((req, res, next) => {
-    res.end(`Will send details of ${req.params.dishId} to you`);
+    res.end(`Will send details of ${req.params.promotionId} to you`);
   })
   .post((req, res, next) => {
     res.statusCode = 403;
-    res.end("POST op not supported on dish " + req.params.dishId);
+    res.end("POST op not supported on promotion " + req.params.promotionId);
   })
   .put((req, res, next) => {
-    res.write(`Updating ${req.params.dishId}`);
+    res.write(`Updating ${req.params.promotionId}`);
     res.end(
-      `Will update the dish ${req.body.name} with details ${
+      `Will update the promotion ${req.body.name} with details ${
         req.body.description
       }`
     );
   })
   .delete((req, res, next) => {
     console.log(req.params);
-    res.end(`Deleting dish ${req.params.dishId}`);
+    res.end(`Deleting promotion ${req.params.promotionId}`);
   });
 
-module.exports = dishRouter;
+module.exports = promotionRouter;
