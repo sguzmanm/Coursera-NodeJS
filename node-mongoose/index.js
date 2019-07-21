@@ -10,19 +10,33 @@ connect
   .then(db => {
     console.log("Connected");
 
-    var newDish = Dishes({
+    Dishes.create({
       name: "Uthapizza",
       description: "Test"
-    });
-
-    newDish
-      .save()
+    })
       .then(dish => {
         console.log("Inserted dish", dish);
-        return Dishes.find({}).exec();
+        return Dishes.findByIdAndUpdate(
+          dish._id,
+          {
+            $set: { description: "Update test" }
+          },
+          {
+            new: true
+          }
+        ).exec();
       })
-      .then(dishes => {
-        console.log("Dishes", dishes);
+      .then(dish => {
+        console.log("Dishes", dish);
+        dish.comments.push({
+          rating: 5,
+          comment: "Cool dish",
+          author: "Checho"
+        });
+        return dish.save();
+      })
+      .then(dish => {
+        console.log(dish);
         return Dishes.remove();
       })
       .then(() => {
