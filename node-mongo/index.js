@@ -1,44 +1,46 @@
 const MongoClient = require("mongodb").MongoClient;
-const assert = require("assert");
 const dboper = require("./operations");
 
 const url = "mongodb://localhost:27017/";
 const dbname = "conFusion";
 
-MongoClient.connect(url, (err, client) => {
-  assert.equal(err, null);
+MongoClient.connect(url)
+  .then(client => {
+    console.log("Connected correctly to server");
+    const db = client.db(dbname);
 
-  console.log("Connected correctly to server");
+    dboper
+      .insertDocument(db, { name: "Vadonut", description: "Test" }, "dishes")
+      .then(result => {
+        console.log("Insert Document:\n", result.ops);
 
-  const db = client.db(dbname);
+        return dboper.findDocuments(db, "dishes");
+      })
+      .then(docs => {
+        console.log("Found Documents:\n", docs);
 
-  dboper.insertDocument(
-    db,
-    { name: "Valdonut", description: "Test" },
-    "dishes",
-    result => {
-      console.log("Insert Document:\n", result.ops);
-
-      dboper.findDocuments(db, "dishes", docs => {
-        console.log("FOund docs:\n", docs);
-
-        dboper.updateDocument(
+        return dboper.updateDocument(
           db,
-          { name: "Valdonut" },
-          { description: "Update test" },
-          "dishes",
-          result => {
-            console.log("Updated document:\n", result.result);
-            dboper.findDocuments(db, "dishes", docs => {
-              console.log("FOund updated docs:\n", docs);
-
-              db.dropCollection("dishes", result => {
-                console.log("Dropped collection\n", result);
-              });
-            });
-          }
+          { name: "Vadonut" },
+          { description: "Updated Test" },
+          "dishes"
         );
-      });
-    }
-  );
-});
+      })
+      .then(result => {
+        console.log("Updated Document:\n", result.result);
+
+        return dboper.findDocuments(db, "dishes");
+      })
+      .then(docs => {
+        console.log("Found Updated Documents:\n", docs);
+
+        return db.dropCollection("dishes");
+      })
+      .then(result => {
+        console.log("Dropped Collection: ", result);
+
+        return client.close();
+      })
+      .catch(err => console.log(err));
+  })
+  .catch(err => console.log(err));
