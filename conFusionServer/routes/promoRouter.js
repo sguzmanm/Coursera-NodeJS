@@ -2,6 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const promotionRouter = express.Router();
+
+promotionRouter.use(bodyParser.json());
+
 // Routes for /
 promotionRouter
   .route("/")

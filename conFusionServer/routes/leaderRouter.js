@@ -2,6 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const leaderRouter = express.Router();
+
+leaderRouter.use(bodyParser.json());
+
 // Routes for /
 leaderRouter
   .route("/")
