@@ -57,7 +57,6 @@ dishRouter
         err => next(err)
       )
       .catch(err => next(err));
-    res.end("Will delete all dishes");
   });
 //Routes for /:dishId
 dishRouter
