@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const Leader = require("../models/leaders");
+const authenticate = require('../authenticate');
+
 const leaderRouter = express.Router();
 
 leaderRouter.use(bodyParser.json());
@@ -9,7 +11,7 @@ leaderRouter.use(bodyParser.json());
 // Routes for /
 leaderRouter
   .route("/")
-  .get((req, res, next) => {
+  .get(authenticate.verifyUser, (req, res, next) => {
     Leader.find({})
       .then(
         docs => {
@@ -21,7 +23,7 @@ leaderRouter
       )
       .catch(err => next(err));
   })
-  .post((req, res, next) => {
+  .post(authenticate.verifyUser, (req, res, next) => {
     Leader.create(req.body)
       .then(
         leader => {
@@ -34,11 +36,11 @@ leaderRouter
       )
       .catch(err => next(err));
   })
-  .put((req, res, next) => {
+  .put(authenticate.verifyUser, (req, res, next) => {
     res.statusCode = 403;
     res.end("PUT op not supported on leaders");
   })
-  .delete((req, res, next) => {
+  .delete(authenticate.verifyUser, (req, res, next) => {
     Leader.remove({})
       .then(
         resp => {
@@ -53,7 +55,7 @@ leaderRouter
 //Routes for /:leaderId
 leaderRouter
   .route("/:leaderId")
-  .get((req, res, next) => {
+  .get(authenticate.verifyUser, (req, res, next) => {
     Leader.findById(req.params.leaderId)
       .then(
         leader => {
@@ -65,11 +67,11 @@ leaderRouter
       )
       .catch(err => next(err));
   })
-  .post((req, res, next) => {
+  .post(authenticate.verifyUser, (req, res, next) => {
     res.statusCode = 403;
     res.end("POST op not supported on leader " + req.params.leaderId);
   })
-  .put((req, res, next) => {
+  .put(authenticate.verifyUser, (req, res, next) => {
     Leader.findByIdAndUpdate(
       req.params.leaderId,
       {
@@ -87,7 +89,7 @@ leaderRouter
       )
       .catch(err => next(err));
   })
-  .delete((req, res, next) => {
+  .delete(authenticate.verifyUser, (req, res, next) => {
     Leader.findByIdAndRemove(req.params.leaderId)
       .then(
         resp => {
