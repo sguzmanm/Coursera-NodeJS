@@ -215,6 +215,13 @@ dishRouter
     Dishes.findById(req.params.dishId)
       .then((dish) => {
         if (dish != null && dish.comments.id(req.params.commentId) != null) {
+          const commentAuthorID = dish.comments.id(req.params.commentId).author
+          if (!req.user._id.equals(commentAuthorID)) {
+            err = new Error('Comment is not owned by user');
+            err.status = 404;
+            return next(err);
+          }
+
           if (req.body.rating) {
             dish.comments.id(req.params.commentId).rating = req.body.rating;
           }
@@ -249,6 +256,12 @@ dishRouter
     Dishes.findById(req.params.dishId)
       .then((dish) => {
         if (dish != null && dish.comments.id(req.params.commentId) != null) {
+          const commentAuthorID = dish.comments.id(req.params.commentId).author
+          if (!req.user._id.equals(commentAuthorID)) {
+            err = new Error('Comment is not owned by user');
+            err.status = 404;
+            return next(err);
+          }
 
           dish.comments.id(req.params.commentId).remove();
           dish.save()
